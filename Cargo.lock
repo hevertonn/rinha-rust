@@ -398,6 +398,7 @@ name = "rinha"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "serde",
  "tokio",
 ]
 
