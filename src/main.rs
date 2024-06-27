@@ -5,7 +5,11 @@ use axum::{
     routing::{get, post},
     Router,
 };
+
 use serde::Deserialize;
+
+mod postgres;
+use postgres::postgres;
 
 #[derive(Debug, Deserialize)]
 struct QueryParams {
