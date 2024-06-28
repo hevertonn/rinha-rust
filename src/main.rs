@@ -7,9 +7,7 @@ use axum::{
 };
 
 use serde::Deserialize;
-
 mod postgres;
-use postgres::postgres;
 
 #[derive(Debug, Deserialize)]
 struct QueryParams {
