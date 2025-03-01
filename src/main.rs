@@ -3,7 +3,7 @@ use axum::{
     Router,
 };
 use dotenvy::dotenv;
-use handlers::feth_person_by_id;
+use handlers::{fetch_people_by_query, feth_person_by_id};
 use std::env;
 use tokio_postgres::NoTls;
 
@@ -27,9 +27,8 @@ async fn main() {
     });
 
     let router: Router = Router::new()
-        .route("/pessoas", post("post pessoas"))
+        .route("/pessoas", post("post pessoas").get(fetch_people_by_query))
         .route("/pessoas/{user_id}", get(feth_person_by_id))
-        .route("/pessoas", get("get pessoas query"))
         .route("/contagem-pessoas", get("get contagem-pessoas"));
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
