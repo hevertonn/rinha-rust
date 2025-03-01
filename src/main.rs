@@ -3,8 +3,11 @@ use axum::{
     Router,
 };
 use dotenvy::dotenv;
+use handlers::feth_person_by_id;
 use std::env;
 use tokio_postgres::NoTls;
+
+mod handlers;
 
 #[tokio::main]
 async fn main() {
@@ -13,7 +16,7 @@ async fn main() {
     let port = env::var("PORT").unwrap_or(String::from("3000"));
     let db_config = env::var("DB_CONFIG").expect("Postgres settings aren't in the environment");
 
-    let (client, connection) = tokio_postgres::connect(&db_config, NoTls)
+    let (_client, connection) = tokio_postgres::connect(&db_config, NoTls)
         .await
         .expect("Failed to connect to postgres");
 
@@ -25,7 +28,7 @@ async fn main() {
 
     let router: Router = Router::new()
         .route("/pessoas", post("post pessoas"))
-        .route("/pessoas/", get("get pessoas id"))
+        .route("/pessoas/{user_id}", get(feth_person_by_id))
         .route("/pessoas", get("get pessoas query"))
         .route("/contagem-pessoas", get("get contagem-pessoas"));
 
@@ -33,5 +36,6 @@ async fn main() {
         .await
         .unwrap();
 
+    println!("Server running on http://localhost:{port}");
     axum::serve(listener, router).await.unwrap();
 }
